@@ -313,3 +313,58 @@ TEST(TSet, testCoutInsClearPlusMinus)
     set1 = set1 - 1;
     EXPECT_EQ(expSet, set1 + set + set1);
 }
+TEST(TSet, can_add_twice)
+{
+    const size_t size = 3;
+    TSet bf1(size), bf2(size),bf3(size);
+    bf2 = bf1 + 2;
+    bf2 = bf2 + 2;
+    bf3 = bf1 + 2;
+    EXPECT_EQ(bf2, bf3);
+
+}
+TEST(TSet, can_clr_the_bit_twice)
+{
+    const size_t size = 3;
+    TSet bf1(size), bf2(size), bf3(size);
+    bf2 = bf1 + 2;
+    bf2 = bf2 - 2;
+    bf2 = bf2 - 2;
+    EXPECT_EQ(bf2, bf3);
+}
+TEST(TSet, can_inverse_set_twice)
+{
+    const size_t size = 3;
+    TSet bf1(size), bf2(size), bf3(size);
+    bf1 = bf2 + 2;
+    bf2 = ~bf1;
+    bf2 = ~bf2;
+    EXPECT_EQ(bf1, bf2);
+
+}
+TEST(TSet, other_test)
+{
+    const size_t size = 4;
+    TSet bf1(size), bf2(size), bf3(size), bf4(size);
+    bf1 = bf1 + 0;
+    bf2 = bf2 + 1;
+    bf3 = ~bf1 + ~bf2;
+    bf4 = bf4 + 0;
+    bf4 = bf4 + 1;
+    bf4 = bf4 + 2;
+    bf4 = bf4 + 3;
+    EXPECT_EQ(bf3, bf4);
+
+}
+TEST(TSet, another_test)
+{
+    const size_t size = 4;
+    TSet bf1(size), bf2(size), bf3(size), bf4(size);
+    bf1 = bf1 + 0;
+    bf2 = bf2 + 1;
+    bf3 = ~bf1 * ~bf2;
+    bf4 = bf4 + 2;
+    bf4 = bf4 + 3;
+    EXPECT_EQ(bf3, bf4);
+
+}

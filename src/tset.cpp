@@ -4,92 +4,127 @@
 // Переработано для Microsoft Visual Studio 2008 Сысоевым А.В. (19.04.2015)
 // Переработано в соответсвии с C++11 (частично) Пановым А.А. 2021
 // Множество - реализация через битовые поля
-
+#include <algorithm>
 #include <iostream>
 #include "tbitfield.h"
 #include "tset.h"
 
-TSet::TSet(size_t mp) : bitField(1) {}
+TSet::TSet(size_t mp) : bitField(mp),maxPower(mp) {}
 
 // конструктор копирования
-TSet::TSet(const TSet &s) : bitField(s.bitField) {}
+TSet::TSet(const TSet &s) : bitField(s.bitField), maxPower(s.maxPower) {}
 
 // конструктор преобразования типа
-TSet::TSet(const TBitField &bf) : bitField(bf) {}
+TSet::TSet(const TBitField &bf) : bitField(bf), maxPower(bf.getLength()) {}
 
 TSet::operator TBitField()
 {
-    return TBitField(1);
+    TBitField tmp(bitField);
+    return tmp;
 }
 
 size_t TSet::getMaxPower() const // получить макс. к-во эл-тов
 {
-    return 0;
+    return maxPower;
 }
 
 bool TSet::isMember(const uint elem) const // элемент множества?
 {
+    if (this->bitField.getBit(elem))
+        return true;
     return false;
 }
 
 void TSet::insElem(const uint elem) // включение элемента множества
 {
-
+    bitField.setBit(elem);
 }
 
 void TSet::delElem(const uint elem) // исключение элемента множества
 {
-
+    bitField.clrBit(elem);
 }
 
 // теоретико-множественные операции
 TSet& TSet::operator=(const TSet &s) // присваивание
 {
+    if (this != &s)
+    {
+        maxPower = s.maxPower;
+        bitField = s.bitField;
+}
     return *this;
 }
 
-bool TSet::operator==(const TSet &s) const // сравнение
+bool TSet::operator==(const TSet& s) const // сравнение
 {
-    return false;
+    if (maxPower != s.maxPower)
+        return false;
+    if (bitField != s.bitField)
+        return false;
+    return true;
+
 }
 
 bool TSet::operator!=(const TSet &s) const // сравнение
 {
-    return true;
+    if (maxPower != s.maxPower)
+        return true;
+    if (bitField != s.bitField)
+        return true;
+    return false;
 }
 
 TSet TSet::operator+(const TSet &s) // объединение
 {
-    return TSet(1);
+    uint l = std::max(maxPower,s.maxPower);
+    TSet tmp(l);
+    tmp.bitField = bitField | s.bitField;
+    return tmp;
 }
 
 TSet TSet::operator+(const uint elem) // объединение с элементом
 {
-    return TSet(1);
+    TBitField tmpBit(maxPower);
+    TSet tmp(maxPower);
+    tmpBit.setBit(elem);
+    tmp.bitField = bitField | tmpBit;
+    return tmp;
 }
 
 TSet TSet::operator-(const uint elem) // разность с элементом
-{
-    return TSet(1);
+{  
+    TBitField k(maxPower);
+    TSet tmp(maxPower);
+    k.setBit(elem);
+    tmp.bitField = bitField & ~k;
+    return tmp;
 }
 
 TSet TSet::operator*(const TSet &s) // пересечение
 {
-    return TSet(1);
+    uint l = std::max(maxPower,s.maxPower);
+    TSet tmp(l);
+    tmp.bitField = bitField & s.bitField;
+    return tmp;
 }
 
 TSet TSet::operator~() // дополнение
 {
-    return TSet(1);
+    TSet tmp(*this);
+    tmp.bitField = ~bitField;
+    return tmp;
 }
 
-// перегрузка ввода/вывода
+
 std::istream &operator>>(std::istream &istr, TSet &s) // ввод
 {
+    istr >> s.bitField;
     return istr;
 }
 
-std::ostream& operator<<(std::ostream &ostr, const TSet &s) // вывод
+std::ostream &operator<<(std::ostream &ostr, const TSet &s) // вывод
 {
+    ostr << s.bitField;
     return ostr;
 }

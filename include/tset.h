@@ -34,7 +34,7 @@ public:
                                    // элемент должен быть из того же универса
   TSet operator+(const TSet &s);   // объединение
   TSet operator*(const TSet &s);   // пересечение
-  TSet operator~();                // дополнение
+  TSet operator~() ;         // дополнение
 
   friend std::istream &operator>>(std::istream &istr, TSet &bf);
   friend std::ostream &operator<<(std::ostream &ostr, const TSet &bf);

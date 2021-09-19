@@ -272,3 +272,59 @@ TEST(TBitField, bitfields_with_different_bits_are_not_equal)
 
     EXPECT_NE(bf1, bf2);
 }
+TEST(TBitField, can_set_the_bit_twice)
+{
+    const size_t size = 3;
+    TBitField bf1(size), bf2(size);
+    bf1.setBit(1);
+    bf1.setBit(1);
+    bf2.setBit(1);
+    EXPECT_EQ(bf1, bf2);
+
+}
+TEST(TBitField, can_clr_the_bit_twice)
+{
+    const size_t size = 3;
+    TBitField bf1(size), bf2(size);
+    bf1.setBit(1);
+    bf1.clrBit(1);
+    bf1.clrBit(1);
+    EXPECT_EQ(bf1, bf2);
+}
+TEST(TBitField, can_inverse_betset_twice)
+{
+    const size_t size = 3;
+    TBitField bf1(size), bf2(size),bf3(size);
+    bf1.setBit(1);
+    bf1.setBit(2);
+    bf2 = ~bf1;
+    bf1 = ~bf2;
+    bf3.setBit(1);
+    bf3.setBit(2);
+    EXPECT_EQ(bf1, bf3);
+
+}
+TEST(TBitField, other_test)
+{
+    const size_t size = 4;
+    TBitField bf1(size), bf2(size),bf3(size),bf4(size);
+    bf1.setBit(0);
+    bf2.setBit(1);
+    bf3 = ~bf1 | ~bf2;
+    bf4.setBit(0);
+    bf4.setBit(1);
+    bf4.setBit(2);
+    bf4.setBit(3);
+    EXPECT_EQ(bf3, bf4);
+}
+TEST(TBitField, another_test)
+{
+    const size_t size = 4;
+    TBitField bf1(size), bf2(size), bf3(size), bf4(size);
+    bf1.setBit(0);
+    bf2.setBit(1);
+    bf3 = ~bf1 & ~bf2;
+    bf4.setBit(2);
+    bf4.setBit(3);
+    EXPECT_EQ(bf3, bf4);
+}

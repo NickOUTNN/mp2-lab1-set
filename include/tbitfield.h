@@ -7,7 +7,7 @@
 
 #pragma once
 #include <iosfwd>
-
+enum EXCEPTION { outOFRANGE };
 typedef unsigned int uint;
 
 class TBitField
@@ -18,16 +18,18 @@ private:
     size_t memLen;   // к-во эл-тов uint для представления бит.поля //длина массива pMem
 
     // методы реализации
-    size_t getIndex(const size_t n) const; // индекс в pМем для бита n
-    uint getMask(const size_t n) const;    // битовая маска для бита n
+    uint getIndex(const size_t n) const ; // индекс в pМем для бита n
+    uint getMask(const size_t n) const; 
+    // битовая маска для бита n
                                  
 public:
+    TBitField();
      TBitField(size_t len);
      TBitField(const TBitField &bf);
      ~TBitField();
 
     // доступ к битам
-    uint getLength() const;            // получить длину (к-во битов)
+    uint getLength() const;  
     void setBit(const size_t n);       // установить бит
     void clrBit(const size_t n);       // очистить бит
     bool getBit(const size_t n) const; // получить значение бита
@@ -38,7 +40,7 @@ public:
     TBitField& operator=(const TBitField &bf);  // присваивание
     TBitField  operator|(const TBitField &bf);  // операция "или"
     TBitField  operator&(const TBitField &bf);  // операция "и"
-    TBitField  operator~();                 // отрицание
+    TBitField  operator~() ;              // отрицание
 
     friend std::istream &operator>>(std::istream &istr, TBitField &bf);
     friend std::ostream &operator<<(std::ostream &ostr, const TBitField &bf);
