@@ -12,7 +12,11 @@
 TBitField::TBitField() :pMem(nullptr), bitLen(0), memLen(0) {}
 TBitField::TBitField(size_t len) : memLen((bitLen + (sizeof(elType)*8)-1) / (sizeof(elType) * 8)), bitLen(len)
 {
-    pMem = new elType[memLen]();
+    pMem = new elType[memLen];
+    for (size_t i = 0; i < memLen; ++i)
+    {
+        pMem[i] = 0;
+    }
 }
 
 TBitField::TBitField(const TBitField& bf) // конструктор копирования
@@ -31,7 +35,7 @@ elType TBitField::getIndex(const size_t n) const  // индекс в pМем д�
 
 elType TBitField::getMask(const size_t n) const // битовая маска для бита n
 {
-    return ~(1u << n);
+    return ~(1ull << n);
 }
 
 elType TBitField::getLength() const // получить длину (к-во битов)
@@ -53,7 +57,7 @@ void TBitField::setBit(const size_t n) // установить бит
         throw expt;
     }
     size_t inside_index = n % (sizeof(elType) * 8);
-    pMem[getIndex(n)] |= (1u << inside_index);
+    pMem[getIndex(n)] |= (1ull << inside_index);
 }
 void TBitField::clrBit(const size_t n)
 {
@@ -74,7 +78,7 @@ bool TBitField::getBit(const size_t n) const // получить значени�
         throw expt;
     }
     elType inside_index = n % (sizeof(elType) * 8);
-    return (bool)(pMem[getIndex(n)] & (1u<<inside_index));
+    return (bool)(pMem[getIndex(n)] & (1ull<<inside_index));
 }
 
 // битовые операции
@@ -191,7 +195,7 @@ std::ostream& operator<<(std::ostream& ostr, const TBitField& bf) // вывод
     {
         for (int j = 0; j < bf.bitLen; ++j)
         {
-            ostr << (bool)(bf.pMem[i] & (1u << j));
+            ostr << (bool)(bf.pMem[i] & (1ull << j));
 
         }
         ostr << std::endl;
